@@ -12,7 +12,13 @@ router.use((req, res, next) => {
 
 // Get all students
 router.get("/", async (req, res, next) => {
-  try {
+  const users = await prisma.student.findMany({}
+    where: {
+      instructorId
+    }
+  );
+  res.json(users);
+  /* try {
     const { rows: students } = await db.query(
       "SELECT * FROM student WHERE instructorId = $1",
       [req.user.id]
@@ -20,11 +26,14 @@ router.get("/", async (req, res, next) => {
     res.send(students);
   } catch (error) {
     next(error);
-  }
+  } */
 });
 
 // Get a student by id
 router.get("/:id", async (req, res, next) => {
+
+
+  
   try {
     const {
       rows: [student],
