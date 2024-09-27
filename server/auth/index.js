@@ -4,7 +4,17 @@ const jwt = require("jsonwebtoken");
 
 // Register a new instructor account
 router.post("/register", async (req, res, next) => {
-  try {
+  const { name, password, cohort, token } = req.body;
+  const user = await prisma.instructor.findUnique({
+      where: {
+          name,
+          password: hashedPassword,
+          cohort
+      }
+  })});
+  
+  
+/*   try {
     const {
       rows: [instructor],
     } = await db.query(
@@ -19,11 +29,25 @@ router.post("/register", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}); */
 
 // Login to an existing instructor account
 router.post("/login", async (req, res, next) => {
-  try {
+  const { name, password } = req.body;
+    const user = await prisma.instructor.findUnique({
+        where: {
+            name
+        }
+    })
+    const isPassowrdMatching = await bcrypt.compare(password, instructor.rows[0].password);
+    if (isPassowrdMatching) {
+        res.json('Login successful');
+    } else {
+        res.json('Login failed');
+    }
+});
+  
+  /* try {
     const {
       rows: [instructor],
     } = await db.query(
@@ -42,10 +66,16 @@ router.post("/login", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}); */
 
 // Get the currently logged in instructor
 router.get("/me", async (req, res, next) => {
+  const users = await prisma.instructor.findMany({
+    name
+  })});
+
+ /*  res.json(users);
+
   try {
     const {
       rows: [instructor],
@@ -57,6 +87,6 @@ router.get("/me", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}); */
 
 module.exports = router;

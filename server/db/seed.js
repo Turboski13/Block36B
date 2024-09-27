@@ -10,7 +10,7 @@ async function seed() {
     await db.query("DROP TABLE IF EXISTS student, instructor;");
 
     // Recreate the tables
-    await db.query(`
+    /* await db.query(`
       CREATE TABLE instructor (
         id SERIAL PRIMARY KEY,
         username TEXT UNIQUE NOT NULL,
@@ -22,7 +22,7 @@ async function seed() {
         cohort TEXT NOT NULL,
         instructorId INTEGER NOT NULL REFERENCES instructor(id) ON DELETE CASCADE
       );
-    `);
+    `); */
 
     // Add 5 instructors.
     await Promise.all(

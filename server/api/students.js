@@ -12,11 +12,11 @@ router.use((req, res, next) => {
 
 // Get all students
 router.get("/", async (req, res, next) => {
-  const users = await prisma.student.findMany({}
+  const users = await prisma.student.findMany({
     where: {
       instructorId
     }
-  );
+});
   res.json(users);
   /* try {
     const { rows: students } = await db.query(
@@ -31,10 +31,16 @@ router.get("/", async (req, res, next) => {
 
 // Get a student by id
 router.get("/:id", async (req, res, next) => {
+  const students = await prisma.student.findUnique({
+    where: {
+      id
+  }
+});
+  res.json(users);
+});
 
 
-  
-  try {
+  /* try {
     const {
       rows: [student],
     } = await db.query(
@@ -50,11 +56,19 @@ router.get("/:id", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}); */
 
 // Create a new student
 router.post("/", async (req, res, next) => {
-  try {
+  const { name, password, cohort, token } = req.body;
+  const user = await prisma.student.findUnique({
+      where: {
+          name,
+          password: hashedPassword
+      }
+  })});
+
+  /* try {
     const {
       rows: [student],
     } = await db.query(
@@ -65,11 +79,21 @@ router.post("/", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}); */
 
 // Update a student
 router.put("/:id", async (req, res, next) => {
-  try {
+  const { id,name, password, cohort, token } = req.body;
+  const user = await prisma.student.findUnique({
+      where: {
+          name,
+          password: hashedPassword,
+          id,
+          cohort
+      }
+  })});
+  
+  /* try {
     const {
       rows: [student],
     } = await db.query(
@@ -85,11 +109,21 @@ router.put("/:id", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}); */
 
 // Delete a student by id
 router.delete("/:id", async (req, res, next) => {
-  try {
+  const { id,name, password, cohort, token } = req.body;
+  const user = await prisma.student.delete({
+      where: {
+          name,
+          password: hashedPassword,
+          id,
+          cohort
+      }
+  })});
+
+  /* try {
     const {
       rows: [student],
     } = await db.query(
@@ -105,6 +139,6 @@ router.delete("/:id", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}); */
 
 module.exports = router;
