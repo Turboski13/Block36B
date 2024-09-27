@@ -1,6 +1,8 @@
 // An instructor can only access their own students' data.
 const router = require("express").Router();
 const db = require("../db");
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // Deny access if user is not logged in
 router.use((req, res, next) => {

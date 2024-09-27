@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const db = require("../db");
 const jwt = require("jsonwebtoken");
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // Register a new instructor account
 router.post("/register", async (req, res, next) => {
@@ -71,8 +73,11 @@ router.post("/login", async (req, res, next) => {
 // Get the currently logged in instructor
 router.get("/me", async (req, res, next) => {
   const users = await prisma.instructor.findMany({
-    name
-  })});
+    where: {
+      name
+    }
+  })
+});
 
  /*  res.json(users);
 
