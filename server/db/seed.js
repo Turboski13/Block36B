@@ -10,7 +10,10 @@ async function seed() {
   console.log("Seeding the database.");
   try {
     // Clear the database.
-    await db.query("DROP TABLE IF EXISTS student, instructor;");
+    /* await db.query("DROP TABLE IF EXISTS student, instructor;"); */
+    await prisma.student.deleteMany();
+    await prisma.instructor.deleteMany();
+
 
     // Recreate the tables
     /* await db.query(`
@@ -30,27 +33,27 @@ async function seed() {
     // Add 5 instructors.
     await Promise.all(
       [...Array(5)].map(() =>
-        db.query(
-          `INSERT INTO instructor (username, password) VALUES ($1, $2);`,
-          [faker.internet.userName(), faker.internet.password()]
-        )
-      )
+        prisma.instructor.create({
+          data: {
+            username: faker.internet.userName(),
+            password: faker.internet.password()
+          },
+        }) )
     );
 
     // Add 4 students for each instructor.
     await Promise.all(
       [...Array(20)].map((_, i) =>
-        db.query(
-          `INSERT INTO student (name, cohort, instructorId) VALUES ($1, $2, $3);`,
-          [
-            faker.person.fullName(),
-            faker.number.int({ min: 2000, max: 3000 }),
-            (i % 5) + 1,
-          ]
-        )
+        prisma.student.create({
+          data: {
+            name: faker.person.fullName(),
+            cohort: faker.number.int({ min: 2000, max: 3000 }),
+            instructorId: instructors[i % 5].id, // Relate students to instructors
+          },
+        })
       )
     );
-
+    
     console.log("Database is seeded.");
   } catch (err) {
     console.error(err);
