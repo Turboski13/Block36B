@@ -15,10 +15,14 @@ model Student {
   name  String
   password String
   cohort String
+  // instructors Instructor[]
 }
+
 model Instructor {
   id    Int     @id @default(autoincrement())
   name  String
   password String
   token String
+//  students Student @relation(fields: [studentId], references: [id])
+ // studentId Int @unique
 }

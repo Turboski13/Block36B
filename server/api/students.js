@@ -1,24 +1,21 @@
 // An instructor can only access their own students' data.
 const router = require("express").Router();
 const db = require("../db");
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+
 // Deny access if user is not logged in
-router.use((req, res, next) => {
+/* router.use((req, res, next) => {
   if (!req.user) {
     return res.status(401).send("You must be logged in to do that.");
   }
   next();
 });
-
+ */
 // Get all students
 router.get("/", async (req, res, next) => {
-  const users = await prisma.student.findMany({
-    where: {
-      instructorId
-    }
-});
+  const users = await prisma.student.findMany();
   res.json(users);
   /* try {
     const { rows: students } = await db.query(
@@ -33,16 +30,15 @@ router.get("/", async (req, res, next) => {
 
 // Get a student by id
 router.get("/:id", async (req, res, next) => {
-  const students = await prisma.student.findUnique({
+  const student = await prisma.student.findUnique({
     where: {
-      id
-  }
-});
-  res.json(users);
+      id: parseInt(req.params.id),
+    },
+  });
+  res.json(student);
 });
 
-
-  /* try {
+/* try {
     const {
       rows: [student],
     } = await db.query(
@@ -62,15 +58,26 @@ router.get("/:id", async (req, res, next) => {
 
 // Create a new student
 router.post("/", async (req, res, next) => {
-  const { name, password, cohort, token } = req.body;
-  const user = await prisma.student.findUnique({
-      where: {
-          name,
-          password: hashedPassword
-      }
-  })});
+  try {
+    const { name, password, cohort } = req.body;
+    const data = await prisma.student.create({
+      data: {
+        name,
+        password,
+        cohort
+      },
+    });
+    console.log(data)
+  
+    res.status(200).send('Student created!');
+  } catch(err){
+    console.log(err)
+    res.status(404).send("error")
+  }
 
-  /* try {
+});
+
+/* try {
     const {
       rows: [student],
     } = await db.query(
@@ -85,17 +92,18 @@ router.post("/", async (req, res, next) => {
 
 // Update a student
 router.put("/:id", async (req, res, next) => {
-  const { id,name, password, cohort, token } = req.body;
+  const { id, name, password, cohort, token } = req.body;
   const user = await prisma.student.findUnique({
-      where: {
-          name,
-          password: hashedPassword,
-          id,
-          cohort
-      }
-  })});
-  
-  /* try {
+    where: {
+      name,
+      password: hashedPassword,
+      id,
+      cohort,
+    },
+  });
+});
+
+/* try {
     const {
       rows: [student],
     } = await db.query(
@@ -115,17 +123,18 @@ router.put("/:id", async (req, res, next) => {
 
 // Delete a student by id
 router.delete("/:id", async (req, res, next) => {
-  const { id,name, password, cohort, token } = req.body;
+  const { id, name, password, cohort, token } = req.body;
   const user = await prisma.student.delete({
-      where: {
-          name,
-          password: hashedPassword,
-          id,
-          cohort
-      }
-  })});
+    where: {
+      name,
+      password: hashedPassword,
+      id,
+      cohort,
+    },
+  });
+});
 
-  /* try {
+/* try {
     const {
       rows: [student],
     } = await db.query(

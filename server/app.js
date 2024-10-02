@@ -3,6 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 const app = express();
 const jwt = require("jsonwebtoken");
+const port = 3000;
 
 // Logging middleware
 app.use(morgan("dev"));
@@ -48,4 +49,4 @@ app.use((req, res) => {
   res.status(404).send("Not found.");
 });
 
-module.exports = app;
+app.listen(3000)
