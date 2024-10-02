@@ -93,11 +93,24 @@ router.post("/", async (req, res, next) => {
 // Update a student
 router.put("/:id", async (req, res, next) => {
   const { id, name, password, cohort, token } = req.body;
-  const user = await prisma.student.update({
-    where: {
-      id: parseInt(req.params.id)
-    },
-  });
+  try {
+    const user = await prisma.student.update({
+      where: {
+        id: parseInt(req.params.id)
+      },
+      data: {
+        name,
+        password,
+        cohort,
+        token
+      }
+    });
+    res.json(updatedStudent);  // Send the updated student back to the client
+  } catch (error) {
+    next(error); 
+
+  }
+  
 });
 
 /* try {
