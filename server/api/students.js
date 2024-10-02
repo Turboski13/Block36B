@@ -93,12 +93,9 @@ router.post("/", async (req, res, next) => {
 // Update a student
 router.put("/:id", async (req, res, next) => {
   const { id, name, password, cohort, token } = req.body;
-  const user = await prisma.student.findUnique({
+  const user = await prisma.student.update({
     where: {
-      name,
-      password: hashedPassword,
-      id,
-      cohort,
+      id: parseInt(req.params.id)
     },
   });
 });
